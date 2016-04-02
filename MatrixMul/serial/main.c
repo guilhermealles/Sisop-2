@@ -10,7 +10,9 @@ void multiplyMatrices();
 
 int main (int argc, char **argv) {
     matrix1 = readMatrix("in1.txt", &matrix1_rows, &matrix1_cols);
+    puts("M1");
     matrix2 = readMatrix("in2.txt", &matrix2_rows, &matrix2_cols);
+    puts("M2");
 
     if (matrix1_cols != matrix2_rows) {
         fprintf(stderr, "Error: these two matrices cannot be multiplied!\n");

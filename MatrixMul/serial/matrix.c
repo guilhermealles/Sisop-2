@@ -24,6 +24,8 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
         errorExit("Error: expected \"COLUNAS =\"");
     }
 
+    printf("Rows: %d, Cols: %d.\n", local_rows, local_cols);
+
     // Allocate matrix in memory
     int **matrix;
     matrix = (int**) malloc(sizeof(int*) * local_rows);
@@ -33,8 +35,8 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
     }
 
     int j;
-    for (i=0; i<local_cols; i++) {
-        for (j=0; j<local_rows; j++) {
+    for (i=0; i<local_rows; i++) {
+        for (j=0; j<local_cols; j++) {
             int value;
             if (fscanf(f, "%d ", &value) == 1) {
                 matrix[i][j] = value;
