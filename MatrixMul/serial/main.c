@@ -9,9 +9,9 @@ int matrix_out_rows, matrix_out_cols, **matrix_out;
 void multiplyMatrices();
 
 int main (int argc, char **argv) {
-    matrix1 = readMatrix("in1.txt", &matrix1_rows, &matrix1_cols);
+    matrix1 = readMatrix("../inputs/big_in1.txt", &matrix1_rows, &matrix1_cols);
     puts("M1");
-    matrix2 = readMatrix("in2.txt", &matrix2_rows, &matrix2_cols);
+    matrix2 = readMatrix("../inputs/big_in2.txt", &matrix2_rows, &matrix2_cols);
     puts("M2");
 
     if (matrix1_cols != matrix2_rows) {
