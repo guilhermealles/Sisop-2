@@ -1,49 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include "matrix.h"
 
-int matrix1_rows, matrix1_cols, **matrix1;
-int matrix2_rows, matrix2_cols, **matrix2;
-int matrix_out_rows, matrix_out_cols, **matrix_out;
 
-void multiplyMatrices();
+matrix *matrix1, *matrix2, *multMatrix;
+int num_threads;
 
 int main (int argc, char **argv) {
-    matrix1 = readMatrix("in1.txt", &matrix1_rows, &matrix1_cols);
-    puts("M1");
-    matrix2 = readMatrix("in2.txt", &matrix2_rows, &matrix2_cols);
-    puts("M2");
+   if (argc == 4) {
+		
 
-    if (matrix1_cols != matrix2_rows) {
-        fprintf(stderr, "Error: these two matrices cannot be multiplied!\n");
-        exit(EXIT_FAILURE);
+        // read and allocate matrix
+        matrix1 = readMatrix(argv[1]);
+		matrix2 = readMatrix(argv[2]);
+
+		// validate if is possible to multiply
+		if(matrix1->cols == matrix2->rows){
+	    	multMatrix = alocateNewMatrix(matrix1->cols, matrix2->rows);
+		}else{
+			errorExit("First matrix cols must be the same length to second matrix rows \n");
+		}
+		   
+		if(num_threads > matrix1->rows){
+			num_threads = matrix1->rows;
+		}
+
+
+		// verificacao 
+		printMatrix(matrix1->matrix, matrix1->rows, matrix1->cols);
+		printMatrix(matrix2->matrix, matrix2->rows, matrix2->cols);
+	    printMatrix(multMatrix->matrix, matrix1->cols, matrix2->rows);
     }
 
-    // Allocate output matrix in memory;
-    matrix_out_rows = matrix1_rows;
-    matrix_out_cols = matrix2_cols;
-    matrix_out = (int**) malloc(sizeof(int*) * matrix_out_rows);
-    int i;
-    for(i=0; i<matrix_out_rows; i++) {
-        matrix_out[i] = (int*) malloc(sizeof(int) * matrix_out_cols);
-    }
-
-    multiplyMatrices();
-    writeMatrix("out.txt", matrix_out, matrix_out_rows, matrix_out_cols);
     return 0;
-}
-
-void multiplyMatrices() {
-    int i, j, k, sum=0;
-
-    for(i=0; i<matrix1_rows; i++) {
-        for(j=0; j<matrix2_cols; j++) {
-            for(k=0; k<matrix2_rows; k++) {
-                sum += matrix1[i][k] * matrix2[k][j];
-            }
-
-            matrix_out[i][j] = sum;
-            sum = 0;
-        }
-    }
 }

@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include "matrix.h"
 
-int** readMatrix (const char *filename, int *rows, int *cols) {
+matrix* readMatrix (const char *filename) {
     FILE *f;
-    int local_rows=0, local_cols=0;
+    int local_rows=0, local_cols=0, i;
 
     f = fopen(filename, "r");
     if (!f) {
@@ -24,55 +24,52 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
         errorExit("Error: expected \"COLUNAS =\"");
     }
 
-    printf("Rows: %d, Cols: %d.\n", local_rows, local_cols);
-
     // Allocate matrix in memory
-    int **matrix;
-    matrix = (int**) malloc(sizeof(int*) * local_rows);
-    int i;
+
+    matrix *m = (matrix*) malloc(sizeof(matrix));
+    m->matrix = (int**) malloc(sizeof(int*) * local_rows);
     for (i=0; i<local_rows; i++) {
-        matrix[i] = (int*) malloc(sizeof(int) * local_cols);
+        m->matrix[i] = (int*) malloc(sizeof(int) * local_cols);
     }
 
-    int j;
-    for (i=0; i<local_rows; i++) {
-        for (j=0; j<local_cols; j++) {
-            int value;
+    int j, value;
+    for (i=0; i<local_cols; i++) {
+        for (j=0; j<local_rows; j++) {
             if (fscanf(f, "%d ", &value) == 1) {
-                matrix[i][j] = value;
+                m->matrix[i][j] = value;
             }
             else {
-                errorExit("Error reading value from matrix file.\n");
+                errorExit("Error reading value from matrix file. \n");
             }
         }
     }
 
-    *rows = local_rows;
-    *cols = local_cols;
-    return matrix;
+    m->rows = local_rows;
+    m->cols = local_cols;
+    return m;
 }
 
-int writeMatrix(const char *filename, int **matrix, int rows, int cols) {
-    FILE *f;
-
-    f = fopen(filename, "w");
-    if (!f) {
-        fprintf(stderr, "Error while creating output file.\n");
-        exit(EXIT_FAILURE);
-    }
-    fprintf(f, "LINHAS = %d\n", rows);
-    fprintf(f, "COLUNAS = %d\n", cols);
+matrix *alocateNewMatrix(int rows, int cols){
+    matrix *newMatrix;
     int i, j;
-    for (i=0; i<rows; i++) {
-        for (j=0; j<cols; j++) {
-            fprintf(f, "%d ", matrix[i][j]);
-        }
-        fprintf(f, "\n");
+
+	newMatrix = (matrix*) malloc(sizeof(matrix));
+
+    newMatrix->matrix = (int**) malloc(sizeof(int*) * rows);
+	newMatrix->rows = rows;
+	newMatrix->cols = cols;
+
+    for(i=0; i<rows; i++){
+		newMatrix->matrix[i] = (int*) malloc(sizeof(int) * cols);
     }
 
-    fclose(f);
+    for(i=0; i<rows; i++){
+		for(j=0; j<cols; j++){
+			newMatrix->matrix[i][j] = -999;    // valor padrao p/ indicar erro
+		}
+    }
 
-    return 1;
+    return newMatrix;	
 }
 
 int matchIdentifier (FILE *f, const char *identifier) {
