@@ -4,7 +4,6 @@
 int** readMatrix (const char *filename, int *rows, int *cols) {
     FILE *f;
     int local_rows=0, local_cols=0;
-
     f = fopen(filename, "r");
     if (!f) {
         errorExit("Fatal error: failed to open file.\n");
@@ -25,17 +24,15 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
     }
 
     // Allocate matrix in memory
-    int **matrix;
+    int **matrix, i;
     matrix = (int**) malloc(sizeof(int*) * local_rows);
-    int i;
     for (i=0; i<local_rows; i++) {
         matrix[i] = (int*) malloc(sizeof(int) * local_cols);
     }
 
-    int j;
+    int j, value;
     for (i=0; i<local_cols; i++) {
         for (j=0; j<local_rows; j++) {
-            int value;
             if (fscanf(f, "%d ", &value) == 1) {
                 matrix[i][j] = value;
             }
@@ -48,6 +45,25 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
     *rows = local_rows;
     *cols = local_cols;
     return matrix;
+}
+
+int** alocateNewMatrix(int rows, int cols){
+    int **newMatrix;
+    int i, j;
+
+    newMatrix = (int**) malloc(sizeof(int*) * rows);
+
+    for(i=0; i<rows; i++){
+		newMatrix[i] = (int*) malloc(sizeof(int) * cols);
+    }
+
+    for(i=0; i<rows; i++){
+		for(j=0; j<cols; j++){
+			newMatrix[i][j] = -999;    // valor padrao p/ indicar erro
+		}
+    }
+
+    return newMatrix;	
 }
 
 int matchIdentifier (FILE *f, const char *identifier) {
