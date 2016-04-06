@@ -33,8 +33,8 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
     }
 
     int j;
-    for (i=0; i<local_cols; i++) {
-        for (j=0; j<local_rows; j++) {
+    for (i=0; i<local_rows; i++) {
+        for (j=0; j<local_cols; j++) {
             int value;
             if (fscanf(f, "%d ", &value) == 1) {
                 matrix[i][j] = value;
@@ -47,7 +47,31 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
 
     *rows = local_rows;
     *cols = local_cols;
+    fclose(f);
     return matrix;
+}
+
+int writeMatrix(const char *filename, int **matrix, int rows, int cols) {
+    FILE *f;
+
+    f = fopen(filename, "w");
+    if (!f) {
+        fprintf(stderr, "Error while creating output file.\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(f, "LINHAS = %d\n", rows);
+    fprintf(f, "COLUNAS = %d\n", cols);
+    int i, j;
+    for (i=0; i<rows; i++) {
+        for (j=0; j<cols; j++) {
+            fprintf(f, "%d ", matrix[i][j]);
+        }
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
+
+    return 1;
 }
 
 int matchIdentifier (FILE *f, const char *identifier) {
