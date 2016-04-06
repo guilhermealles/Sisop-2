@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include "matrix.h"
 
-int** readMatrix (const char *filename, int *rows, int *cols) {
+matrix* readMatrix (const char *filename) {
     FILE *f;
-    int local_rows=0, local_cols=0;
+    int local_rows=0, local_cols=0, i;
+
     f = fopen(filename, "r");
     if (!f) {
         errorExit("Fatal error: failed to open file.\n");
@@ -24,17 +25,18 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
     }
 
     // Allocate matrix in memory
-    int **matrix, i;
-    matrix = (int**) malloc(sizeof(int*) * local_rows);
+
+    matrix *m = (matrix*) malloc(sizeof(matrix));
+    m->matrix = (int**) malloc(sizeof(int*) * local_rows);
     for (i=0; i<local_rows; i++) {
-        matrix[i] = (int*) malloc(sizeof(int) * local_cols);
+        m->matrix[i] = (int*) malloc(sizeof(int) * local_cols);
     }
 
     int j, value;
     for (i=0; i<local_cols; i++) {
         for (j=0; j<local_rows; j++) {
             if (fscanf(f, "%d ", &value) == 1) {
-                matrix[i][j] = value;
+                m->matrix[i][j] = value;
             }
             else {
                 errorExit("Error reading value from matrix file.\n");
@@ -42,24 +44,28 @@ int** readMatrix (const char *filename, int *rows, int *cols) {
         }
     }
 
-    *rows = local_rows;
-    *cols = local_cols;
-    return matrix;
+    m->rows = local_rows;
+    m->cols = local_cols;
+    return m;
 }
 
-int** alocateNewMatrix(int rows, int cols){
-    int **newMatrix;
+matrix *alocateNewMatrix(int rows, int cols){
+    matrix *newMatrix;
     int i, j;
 
-    newMatrix = (int**) malloc(sizeof(int*) * rows);
+	newMatrix = (matrix*) malloc(sizeof(matrix));
+
+    newMatrix->matrix = (int**) malloc(sizeof(int*) * rows);
+	newMatrix->rows = rows;
+	newMatrix->cols = cols;
 
     for(i=0; i<rows; i++){
-		newMatrix[i] = (int*) malloc(sizeof(int) * cols);
+		newMatrix->matrix[i] = (int*) malloc(sizeof(int) * cols);
     }
 
     for(i=0; i<rows; i++){
 		for(j=0; j<cols; j++){
-			newMatrix[i][j] = -999;    // valor padrao p/ indicar erro
+			newMatrix->matrix[i][j] = -999;    // valor padrao p/ indicar erro
 		}
     }
 
