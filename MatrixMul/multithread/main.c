@@ -66,11 +66,19 @@ int main (int argc, char **argv) {
       		pthread_join(thread[i], NULL); 
 		}
 
+		if(writeMatrix("out.txt", multMatrix) == 1){
+			printf("Arquivo de saída gerado com sucesso.\n");
+		}
+
 		// verificacao 
 		printMatrix(matrix1->matrix, matrix1->rows, matrix1->cols);
 		printMatrix(matrix2->matrix, matrix2->rows, matrix2->cols);
 	    printMatrix(multMatrix->matrix, matrix1->cols, matrix2->rows);
 
+
+		free(matrix1);
+		free(matrix2);
+		free(multMatrix);
 		
     }
 

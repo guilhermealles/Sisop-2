@@ -13,6 +13,7 @@ int matchIdentifier (FILE *f, const char *identifier);
 void printMatrix(int **matrix, int rows, int cols);
 void errorExit (const char *error_msg);
 matrix* alocateNewMatrix(int rows, int cols);
+int writeMatrix(const char *filename, matrix *saida);
 
 
 #endif

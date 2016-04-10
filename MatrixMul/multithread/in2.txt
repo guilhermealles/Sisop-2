@@ -1,5 +1,0 @@
-LINHAS = 3
-COLUNAS = 1
-4
-5
-6
