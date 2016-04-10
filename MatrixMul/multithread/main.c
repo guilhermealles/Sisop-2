@@ -7,20 +7,17 @@
 matrix *matrix1, *matrix2, *multMatrix;
 int num_threads;
 
-/////////// arrumar ////////////////
 void* multiply(void* tid){
 	int i, j,k, result;
 	int line = (int) tid;
-	printf("tid thread %d\n", line);
 
-	for(k = line; i < matrix1->rows; i += num_threads){ 
+	for(k = line; k < matrix1->rows; k += num_threads){ 
 		for(i=0; i < matrix2->cols; i++){
 			result = 0;
 			for(j=0; j < matrix1->rows; j++){
-				result = result + (matrix1->matrix[line][i] * matrix2->matrix[j][i]); 
+				result = result + (matrix1->matrix[k][i] * matrix2->matrix[j][i]); 
 			}
-			printf("line %d \n", line);
-			multMatrix->matrix[line][i] = result;	
+			multMatrix->matrix[k][i] = result;	
 		}
 	}
 	return 0;
