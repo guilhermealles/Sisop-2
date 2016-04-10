@@ -20,6 +20,7 @@ void* multiply(void* tid){
 			multMatrix->matrix[k][i] = result;	
 		}
 	}
+
 	return 0;
 }
 
