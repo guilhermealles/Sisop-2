@@ -4,15 +4,13 @@
 
 int matrix1_rows, matrix1_cols, **matrix1;
 int matrix2_rows, matrix2_cols, **matrix2;
-int matrix_out_rows, matrix_out_cols, **matrix_out;
+int matrix_out_rows, matrix_out_cols, *matrix_out;
 
 void multiplyMatrices();
 
 int main (int argc, char **argv) {
     matrix1 = readMatrix("../inputs/big_in1.txt", &matrix1_rows, &matrix1_cols);
-    puts("M1");
     matrix2 = readMatrix("../inputs/big_in2.txt", &matrix2_rows, &matrix2_cols);
-    puts("M2");
 
     if (matrix1_cols != matrix2_rows) {
         fprintf(stderr, "Error: these two matrices cannot be multiplied!\n");
@@ -22,11 +20,7 @@ int main (int argc, char **argv) {
     // Allocate output matrix in memory;
     matrix_out_rows = matrix1_rows;
     matrix_out_cols = matrix2_cols;
-    matrix_out = (int**) malloc(sizeof(int*) * matrix_out_rows);
-    int i;
-    for(i=0; i<matrix_out_rows; i++) {
-        matrix_out[i] = (int*) malloc(sizeof(int) * matrix_out_cols);
-    }
+    matrix_out = (int*) malloc(sizeof(int) * (matrix_out_rows * matrix_out_cols));
 
     multiplyMatrices();
     writeMatrix("out.txt", matrix_out, matrix_out_rows, matrix_out_cols);
@@ -42,7 +36,7 @@ void multiplyMatrices() {
                 sum += matrix1[i][k] * matrix2[k][j];
             }
 
-            matrix_out[i][j] = sum;
+            matrix_out[(i*matrix_out_rows) + j] = sum;
             sum = 0;
         }
     }
