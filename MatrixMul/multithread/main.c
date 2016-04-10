@@ -8,16 +8,16 @@ matrix *matrix1, *matrix2, *multMatrix;
 int num_threads;
 
 void* multiply(void* tid){
-	int i, j,k, result;
+	int i, j,k, result = 0;
 	int line = (int) tid;
 
 	for(k = line; k < matrix1->rows; k += num_threads){ 
-		for(i=0; i < matrix2->cols; i++){
-			result = 0;
+		for(i=0; i < matrix2->cols; i++){			
 			for(j=0; j < matrix1->rows; j++){
-				result = result + (matrix1->matrix[k][i] * matrix2->matrix[j][i]); 
+				result = result + (matrix1->matrix[k][j] * matrix2->matrix[j][i]); 
 			}
 			multMatrix->matrix[k][i] = result;	
+			result = 0;
 		}
 	}
 
@@ -71,9 +71,9 @@ int main (int argc, char **argv) {
 		}
 
 		// verificacao 
-		printMatrix(matrix1->matrix, matrix1->rows, matrix1->cols);
-		printMatrix(matrix2->matrix, matrix2->rows, matrix2->cols);
-	    printMatrix(multMatrix->matrix, matrix1->cols, matrix2->rows);
+	//	printMatrix(matrix1->matrix, matrix1->rows, matrix1->cols);
+	//	printMatrix(matrix2->matrix, matrix2->rows, matrix2->cols);
+	//  printMatrix(multMatrix->matrix, matrix1->cols, matrix2->rows);
 
 
 		free(matrix1);
